@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Music Quiz</title>
+  <style>
+    /* Base Page */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #c33764, #1d2671);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    /* Glowing animation */
+    @keyframes colorShiftGlow {
+      0% {
+        box-shadow: 0 0 15px rgba(195, 55, 100, 0.6), inset 0 0 10px rgba(195, 55, 100, 0.4);
+      }
+      33% {
+        box-shadow: 0 0 15px rgba(29, 38, 113, 0.6), inset 0 0 10px rgba(29, 38, 113, 0.4);
+      }
+      66% {
+        box-shadow: 0 0 15px rgba(201, 111, 97, 0.6), inset 0 0 10px rgba(201, 111, 97, 0.4);
+      }
+      100% {
+        box-shadow: 0 0 15px rgba(195, 55, 100, 0.6), inset 0 0 10px rgba(195, 55, 100, 0.4);
+      }
+    }
+
+    /* Quiz Box Styling */
+    #quiz-box {
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 2.5px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      animation: colorShiftGlow 8s ease-in-out infinite;
+      transition: transform 0.3s ease;
+    }
+
+    #quiz-box:hover {
+      transform: scale(1.02);
+    }
+
+    /* Countdown */
+    #countdown {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+
+    /* Screens */
+    .start-screen, .question-screen, .final-screen {
+      text-align: center;
+    }
+
+    /* Start Button */
+    .start-btn {
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #ffffff;
+      color: #1d2671;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #ffffff44;
+    }
+
+    .start-btn:hover {
+      background-color: #ddd;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #ccccccaa;
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: #e0e0e0;
+    }
+
+    /* Question */
+    .question {
+      font-size: 1.6em;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #ffffff;
+    }
+
+    /* Options */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .options button {
+      background-color: #ff4b2b;
+      border: none;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #ff4b2b66;
+      width: 100%;
+    }
+
+    .options button:hover:not(:disabled) {
+      background-color: #ff6f61;
+      transform: scale(1.03);
+      box-shadow: 0 0 15px #ff6f61cc;
+    }
+
+    /* Feedback */
+    #feedback {
+      margin-top: 20px;
+      font-size: 1.1em;
+      font-style: italic;
+      min-height: 24px;
+      color: #ffe;
+    }
+
+    /* Animation for wrong answers */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-10px); }
+      80% { transform: translateX(10px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+  </style>
+</head>
+<body>
+
+<div id="quiz-box">
+  <div id="quiz-content" class="start-screen">
+    <h2>🎶 Welcome to the Music Quiz!</h2>
+    <p>Test your knowledge. Music will play with each question 🎧</p>
+    <button class="start-btn" onclick="startQuiz()">Start Quiz</button>
+  </div>
+</div>
+
+<audio id="question-song" preload="auto"></audio>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+  
+  const quizData = [
+     {
+        question: "Which artist sang the hit song 'Pani Da Rang'?",
+        options: ["Ayushmann Khurrana", "Pritam", "Arijit Singh", "Darshan Raval"],
+        answer: "Ayushmann Khurrana",
+        audio:"hindi songs/pani_da.mp3",
+      },
+
+      {
+        question: "The song 'Kesariya' belongs to which movie?",
+        options: ["Jawan", "Rocky Aur Rani", "Brahmastra", "Animal"],
+        answer: "Brahmastra",
+        audio:"hindi songs/kesariya.mp3"
+      },
+      {
+        question: "Which actor danced in the 'Chaleya'?",
+        options: ["Shah Rukh Khan", "Ranbir kapoor", "Varun Dhawan", "Ranveer Singh"],
+        answer: "Shah Rukh Khan",
+        audio:"hindi songs/chaleya.mp3"
+      },
+      {
+        question: "Who is the singer of the song 'Nazar Na lag Jaye'?",
+        options: ["Sachin Jigar","Pritam","Amit Trivedi","Shankar Mahadevan"],
+        answer: "Sachin Jigar",
+        audio:"hindi songs/nazar_na_lagjaye.mp3"
+      },
+      {
+        question: "Guess the artist of song 'Mast Magan'?",
+        options: ["Pritam","Vishal Mishra","Arijit Singh","Atif Aslam "],
+        answer: "Arijit Singh",
+        audio:"hindi songs/mast_magan.mp3"
+      },
+      {
+      question: "Who sang 'Pasoori'?",
+        options: ["Ali Sethi","Arijit Singh","Atif Aslam","jubin Nautiyal"],
+        answer: "Ali Sethi",
+        audio:"hindi songs/pasoori.mp3"
+      },
+      {
+      question: "Which artist sang the hit song'Finding Her'?",
+        options: ["Anuv jain","Kushagra","Sachin-Jigar","Ap Dhillon"],
+        answer: "Kushagra",
+        audio:"hindi songs/finding_her.mp3"
+      },
+      {
+        question: "Guess the artist of 'Satranga'?",
+        options: ["Arijit Singh","KK","Anuv Jain","Atif Aslam"],
+        answer: "Arijit Singh",
+        audio:"hindi songs/satranga.mp3"
+      },
+      {
+         question: "Guess the song from Malang?",
+         options: ["Sajni","Ishq Hai","Hamraah","Satranga"],
+         answer: "Hamraah",
+         audio:"hindi songs/humrah.mp3"
+      },
+      {
+         question: "Guess the song from 'Tamasha'?",
+         options: ["Matargashti","Uff Teri Adaa","Jugnu","Liggi"],
+         answer: "Matargashti",
+            audio:"hindi songs/matargashti.mp3"
+      }, 
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+
+  function playQuestionAudio(audioFile) {
+    const player = document.getElementById("question-song");
+    player.pause();
+    player.src = audioFile;
+    player.currentTime = 0;
+    player.volume = 0.5;
+    player.play().catch(() => {
+      console.log("Autoplay blocked.");
+    });
+  }
+
+  function celebrate() {
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+
+  function loadQuestion() {
+    if (currentQuestion >= quizData.length) {
+      showFinalScreen();
+      return;
+    }
+
+    const q = quizData[currentQuestion];
+    playQuestionAudio(q.audio);
+
+    const quizContent = document.getElementById("quiz-content");
+    quizContent.className = "question-screen";
+    quizContent.innerHTML = `
+      <div class="dashboard">
+        <div>Question ${currentQuestion + 1} of ${quizData.length}</div>
+        <div>Score: ${score}</div>
+      </div>
+      <div class="question">${q.question}</div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    `;
+
+    const optionsDiv = document.getElementById("options");
+    q.options.forEach(opt => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.onclick = () => checkAnswer(btn, q.answer);
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(button, correctAnswer) {
+    const allButtons = document.querySelectorAll(".options button");
+    allButtons.forEach(b => b.disabled = true);
+
+    const feedback = document.getElementById("feedback");
+    const quizBox = document.getElementById("quiz-box");
+
+    if (button.textContent === correctAnswer) {
+      feedback.textContent = "✅ Correct!";
+      feedback.style.color = "#00c851";
+      button.style.backgroundColor = "#00c851";
+      score++;
+      celebrate();
+    } else {
+      feedback.textContent = "❌ Oops! The correct answer is: " + correctAnswer;
+      feedback.style.color = "#ff4444";
+      button.style.backgroundColor = "#ff4444";
+      quizBox.classList.add("shake");
+      setTimeout(() => quizBox.classList.remove("shake"), 500);
+    }
+
+    setTimeout(() => {
+      currentQuestion++;
+      loadCountdown();
+    }, 2000);
+  }
+
+  function loadCountdown() {
+    if (currentQuestion >= quizData.length) {
+      showFinalScreen();
+      return;
+    }
+
+    const quizContent = document.getElementById("quiz-content");
+    quizContent.className = "countdown-screen";
+    quizContent.innerHTML = `
+      <div class="dashboard">
+        <div>Get ready for next question...</div>
+        <div>Score: ${score}</div>
+      </div>
+      <div id="countdown">3</div>
+    `;
+
+    let timeLeft = 3;
+    const countdownEl = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      timeLeft--;
+      countdownEl.textContent = timeLeft;
+      if (timeLeft === 0) {
+        clearInterval(interval);
+        loadQuestion();
+      }
+    }, 1000);
+  }
+
+  function showFinalScreen() {
+    const quizContent = document.getElementById("quiz-content");
+    quizContent.className = "final-screen";
+    quizContent.innerHTML = 
+    `<div>
+        <h2>🎉 Quiz Complete!</h2>
+        <p>Your Score: ${score} / ${quizData.length}</p>
+        <p>Thanks for playing!</p>
+        <a href="login.html" class="button-link logout-btn">Logout</a>    
+            <a href="home.html" class="button-link home-btn">Back to Home</a>
+      </div>`;
+  }
+
+  function startQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    loadCountdown();
+  }
+</script>
+
+</body>
+</html>
