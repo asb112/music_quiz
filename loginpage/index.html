@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neon Sign up</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="box">
+    <form id="signupForm">
+      <h2><i class="fa fa-volume-up"></i> Sign up <span style="color: #ff0057;"></span></h2>
+      <div class="inputBox">
+        <input type="text" placeholder="Username" id="Username" />
+      </div>
+      <div class="inputBox">
+        <input type="password" placeholder="Password" id="Password" />
+      </div>
+      <div class="inputBox">
+        <input type="submit" value="Create Account" />
+      </div>
+      <div class="links">
+        <a href="login.html">← Back to Login</a>
+      </div>
+    </form>
+  </div>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("signupForm");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault(); // prevent actual submission
+
+        const username = document.getElementById("Username").value.trim();
+        const password = document.getElementById("Password").value.trim();
+
+        if (!username || !password) {
+          alert("Username and Password are required.");
+          return;
+        }
+
+        const userPattern = /^[a-zA-Z0-9_@.]+$/;
+        if (!userPattern.test(username)) {
+          alert("Invalid characters in Username.");
+          return;
+        }
+
+        if (password.length < 6) {
+          alert("Password must be at least 6 characters long.");
+          return;
+        }
+
+        // All validations passed, redirect to home
+        window.location.href = "home.html";
+      });
+    });
+  </script>
+</body>
+</html>
