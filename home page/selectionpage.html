@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Select Music Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      /*background: linear-gradient(135deg, #7f00ff, #e100ff);*/
+      background: linear-gradient(to right, #c33764, #1d2671);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 40px;
+    }
+
+    .quiz-options {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .quiz-box {
+      width: 180px;
+      height: 160px;
+      background-color: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      text-decoration: none;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      font-weight: 500;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .quiz-box i {
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    .quiz-box:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+    }
+
+    .home-button {
+      margin-top: 20px;
+      padding: 12px 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      color: white;
+      font-size: 16px;
+      font-weight: bolder;
+      text-decoration:none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.3s;
+    }
+
+    .home-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select Your Music Quiz</h1>
+
+  <div class="quiz-options">
+    <a href="../quiz pages/oldsquiz.html" class="quiz-box">
+      <i class="fas fa-record-vinyl"></i>
+      Purani Dhoon
+    </a>
+
+    <a href="../quiz pages/hindiquiz.html" class="quiz-box">
+      <i class="fas fa-music"></i>
+      Hindi Music
+    </a>
+
+    <a href="../quiz pages/englishquiz.html" class="quiz-box">
+      <i class="fas fa-guitar"></i>
+      English Music
+    </a>
+
+    <a href="../quiz pages/mixedquiz.html" class="quiz-box">
+      <i class="fas fa-headphones"></i>
+      Mixed Music
+    </a>
+  </div>
+
+     <a href="home.html" class="home-button">
+   <i class="fas fa-arrow-left">  B a c k     t o      H o m e
+    </i>
+  </a>
+ 
+
+
+</body>
+</html>
